@@ -28,7 +28,8 @@ These commands are mostly admin commands, but some are not.
   * List the players on the server using the /list command
 
 ## Licence
-Code: LGPL v2.1+
+Code: LGPL v2.1
+
 Textures & Models: CC-BY 3.0 Unported
 
 ## What else can this do?
