@@ -227,7 +227,8 @@ minetest.register_chatcommand("spawnpoint", {
 	privs = {spawnpoint = true},
 	func = function(name, param)
 		local player = minetest.get_player_by_name(name)
-		minetest.setting_set("static_spawnpoint", minetest.pos_to_string(player:getpos()))
+		beds.spawn[name] = player:getpos()
+		beds.save_spawns()
 		minetest.chat_send_player(name, "Spawnpoint set.")
 		if minetest.setting_getbool("enable_command_feedback") then
 			minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Set "..name.."'s spawnpoint.]"))
@@ -290,7 +291,7 @@ minetest.register_chatcommand("spawn", {
 	params = "",
 	privs = {spawn = true},
 	func = function(name, param)
-		minetest.get_player_by_name(name):setpos(minetest.string_to_pos(minetest.setting_get("static_spawnpoint")))
+		minetest.get_player_by_name(name):setpos(beds.spawn[name])
 		minetest.chat_send_player(name, "Telleported to spawn.")
 		if minetest.setting_getbool("enable_command_feedback") then
 			minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Teleported to spawnpoint.]"))
