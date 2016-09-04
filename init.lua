@@ -62,13 +62,13 @@ minetest.register_chatcommand("vanish", {
 					})
 					target:set_nametag_attributes({color = {a = 255, r = 255, g = 255, b = 255}})
 				else
-					minetest.chat_send_player(minetest.colorize("#FF0000", "Invalid first argument. Taking no action."))
+					minetest.chat_send_player(name, minetest.colorize("#FF0000", "Invalid first argument. Taking no action."))
 				end
 			else
-				minetest.chat_send_player(minetest.colorize("#FF0000", "Player not found or insufficiant privs."))
+				minetest.chat_send_player(name, minetest.colorize("#FF0000", "Player not found or insufficiant privs."))
 			end
 		else
-			minetest.chat_send_player(minetest.colorize("#FF0000", "Invalid Usage."))
+			minetest.chat_send_player(name, minetest.colorize("#FF0000", "Invalid Usage."))
 		end
 	end
 })
