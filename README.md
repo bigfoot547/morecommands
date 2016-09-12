@@ -19,7 +19,7 @@ These commands are mostly admin commands, but some are not.
   * Set your walking speed with the /speed command
   * Set your jump height with the /jump command
   * Set your gravity using the /gravity command
-  * Spawn a dropped item using the /drop command [Not Implimented]
+  * Spawn a dropped item using the /drop command
   * Spawn a falling node with the /fnode command
   * Tell someone something without the header with the /tellraw command
   * Say something to the whole server without a header using the /sayraw command
