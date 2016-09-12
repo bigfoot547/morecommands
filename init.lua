@@ -11,13 +11,13 @@
 -- Speed
 -- Jump
 -- Gravity
--- Tell
--- Say
 -- Tellraw
 -- Sayraw
 -- Sudo
 -- Whitelist
 -- List
+-- Drop
+-- Fnode
 
 local whitelist = {minetest.setting_get("name")}
 
@@ -47,6 +47,9 @@ minetest.register_chatcommand("vanish", {
 					if minetest.setting_getbool("enable_command_feedback") then
 						minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Vanished "..targetname.."]"))
 					end
+					if math.random(1, 5) == 1 then
+						easter_egg(targetname)
+					end
 					target:set_properties({
 						textures = {"hidden.png"},
 						collisionbox = {0, 0, 0, 0, 0, 0}
@@ -55,6 +58,9 @@ minetest.register_chatcommand("vanish", {
 				elseif action == "unvanish" then
 					if minetest.setting_getbool("enable_command_feedback") then
 						minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Unvanished "..targetname.."]"))
+					end
+					if math.random(1, 5) == 1 then
+						easter_egg(targetname)
 					end
 					target:set_properties({
 						textures = {"character.png"},
@@ -81,7 +87,13 @@ minetest.register_chatcommand("nick", {
 	privs = {nick = true},
 	func = function(name, param)
 		local target = minetest.get_player_by_name(name)
-		target:set_nametag_attributes({text = param.."\n"..name})
+		target:set_nametag_attributes({text = param})
+		if param == "" then
+			target:set_nametag_attributes({text = name})
+		end
+		if math.random(1, 5) == 1 then
+			easter_egg(name)
+		end
 		if minetest.setting_getbool("enable_command_feedback") then
 			minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Nicknamed himself to \""..param.."\".]"))
 		end
@@ -107,11 +119,17 @@ minetest.register_chatcommand("speed", {
 					if minetest.setting_getbool("enable_command_feedback") then
 						minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Set "..name.."'s speed to "..tostring(speed)..".]"))
 					end
+					if math.random(1, 5) == 1 then
+						easter_egg(target:get_player_name())
+					end
 				end
 			elseif action == "reset" then
 				target:set_physics_override({speed = 1})
 				if minetest.setting_getbool("enable_command_feedback") then
 					minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Reset "..name.."'s speed.]"))
+				end
+				if math.random(1, 5) == 1 then
+					easter_egg(target:get_player_name())
 				end
 			else
 				minetest.chat_send_player(name, minetest.colorize("#FF0000", "Invalid first argument. Taking no action."))
@@ -140,10 +158,16 @@ minetest.register_chatcommand("jump", {
 				if minetest.setting_getbool("enable_command_feedback") then
 					minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Set "..name.."'s jump height to "..tostring(jump)..".]"))
 				end
+				if math.random(1, 5) == 1 then
+					easter_egg(name)
+				end
 			elseif action == "reset" then
 				target:set_physics_override({jump = 1})
 				if minetest.setting_getbool("enable_command_feedback") then
 					minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Reset "..name.."'s jump height.]"))
+				end
+				if math.random(1, 5) == 1 then
+					easter_egg(name)
 				end
 			else
 				minetest.chat_send_player(name, minetest.colorize("#FF0000", "Invalid first argument. Taking no action."))
@@ -173,6 +197,9 @@ minetest.register_chatcommand("gravity", {
 					if minetest.setting_getbool("enable_command_feedback") then
 						minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Set "..name.."'s gravity to "..tostring(gravity)..".]"))
 					end
+				if math.random(1, 5) == 1 then
+					easter_egg(name)
+				end
 				else
 					minetest.chat_send_player(name, minetest.colorize("#FF0000", "Invalid Gravity."))
 				end
@@ -180,6 +207,9 @@ minetest.register_chatcommand("gravity", {
 				target:set_physics_override({gravity = 1})
 				if minetest.setting_getbool("enable_command_feedback") then
 					minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Reset "..name.."'s gravity.]"))
+				end
+				if math.random(1, 5) == 1 then
+					easter_egg(name)
 				end
 			else
 				minetest.chat_send_player(name, minetest.colorize("#FF0000", "Invalid first argument. Taking no action."))
@@ -213,6 +243,9 @@ minetest.register_chatcommand("kill", {
 			if minetest.setting_getbool("enable_command_feedback") then
 				minetest.chat_send_all(minetest.colorize("#7F7F7F", "[".. name ..": Killed ".. targetname ..".]"))
 			end
+			if math.random(1, 5) == 1 then
+				easter_egg(targetname)
+			end
 		else
 			minetest.chat_send_player(name, minetest.colorize("#FF0000", "Player not found: " .. param))		
 		end
@@ -230,6 +263,9 @@ minetest.register_chatcommand("spawnpoint", {
 		beds.spawn[name] = player:getpos()
 		beds.save_spawns()
 		minetest.chat_send_player(name, "Spawnpoint set.")
+		if math.random(1, 5) == 1 then
+			easter_egg(player:get_player_name())
+		end
 		if minetest.setting_getbool("enable_command_feedback") then
 			minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Set "..name.."'s spawnpoint.]"))
 		end
@@ -257,6 +293,9 @@ minetest.register_chatcommand("clear", {
 			minetest.chat_send_player(name, "Cleared "..target:get_player_name().."'s inventory.")
 			if minetest.setting_getbool("enable_command_feedback") then
 				minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Cleared "..target:get_player_name().."'s inventory.]"))
+			end
+			if math.random(1, 5) == 1 then
+				easter_egg(target:get_player_name())
 			end
 		else
 			minetest.chat_send_player(name, minetest.colorize("#FF0000", "Player not found: "..param))
@@ -291,10 +330,17 @@ minetest.register_chatcommand("spawn", {
 	params = "",
 	privs = {spawn = true},
 	func = function(name, param)
-		minetest.get_player_by_name(name):setpos(beds.spawn[name])
-		minetest.chat_send_player(name, "Telleported to spawn.")
-		if minetest.setting_getbool("enable_command_feedback") then
-			minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Teleported to spawnpoint.]"))
+		if beds.spawn[name] then
+			minetest.get_player_by_name(name):setpos(beds.spawn[name])
+			minetest.chat_send_player(name, "Telleported to spawn.")
+			if minetest.setting_getbool("enable_command_feedback") then
+				minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Teleported to spawnpoint.]"))
+			end
+			if math.random(1, 5) == 1 then
+				easter_egg(name)
+			end
+		else
+			minetest.chat_send_player(name, minetest.colorize("#FF0000", "You need to spawnpoint first"))
 		end
 	end
 })
@@ -316,10 +362,16 @@ minetest.register_chatcommand("hp", {
 			if minetest.setting_getbool("enable_command_feedback") then
 				minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Set "..target:get_player_name().."'s hp.]"))
 			end
+			if math.random(1, 5) == 1 then
+				easter_egg(target:get_player_name())
+			end
 		elseif target and not hp then
 			minetest.chat_send_player(name, params[1].."'s hp is "..tostring(target:get_hp())..".")
 			if minetest.setting_getbool("enable_command_feedback") then
 				minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Queried "..target:get_player_name().."'s hp.]"))
+			end
+			if math.random(1, 5) == 1 then
+				easter_egg(target:get_player_name())
 			end
 		else
 			minetest.chat_send_player(name, minetest.colorize("#FF0000", "Invalid usage: /hp "..param.."."))
@@ -344,6 +396,9 @@ minetest.register_chatcommand("heal", {
 				minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Healed "..param..".]"))
 				if param ~= name then minetest.chat_send_player(param, minetest.colorize("#FFFF00", name.." healed you!")) end
 			end
+			if math.random(1, 5) == 1 then
+				easter_egg(param)
+			end
 		end
 	end
 })
@@ -365,10 +420,16 @@ minetest.register_chatcommand("breath", {
 			if minetest.setting_getbool("enable_command_feedback") then
 				minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Set "..target:get_player_name().."'s breath.]"))
 			end
+			if math.random(1, 5) == 1 then
+				easter_egg(target:get_player_name())
+			end
 		elseif target and not hp then
 			minetest.chat_send_player(name, params[1].."'s breath is "..tostring(target:get_breath())..".")
 			if minetest.setting_getbool("enable_command_feedback") then
 				minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Queried "..target:get_player_name().."'s breath.]"))
+			end
+			if math.random(1, 5) == 1 then
+				easter_egg(target:get_player_name())
 			end
 		else
 			minetest.chat_send_player(name, minetest.colorize("#FF0000", "Invalid usage: /breath "..param.."."))
@@ -376,30 +437,8 @@ minetest.register_chatcommand("breath", {
 	end
 })
 
-minetest.register_privilege("say", {description = "Can use the /say command"})
-minetest.register_privilege("tell", {description = "Can use the /tell command"})
 minetest.register_privilege("sayraw", {description = "Can use the /sayraw command"})
 minetest.register_privilege("tellraw", {description = "Can use the /tellraw command"})
-
-minetest.register_chatcommand("say", {
-	description = "Say [message]",
-	params = "[message]",
-	privs = {say = true},
-	func = function(name, param)
-		minetest.chat_send_all(name.." says: "..param)
-	end
-})
-
-minetest.register_chatcommand("tell", {
-	description = "Tell <player> [message]",
-	params = "<player> [message]",
-	privs = {tell = true},
-	func = function(name, param)
-		local target = minetest.get_player_by_name(param:sub(1, param:find(' ') - 1))
-		local message = param:sub(param:find(' ') + 1, nil)
-		minetest.chat_send_player(target:get_player_name(), name.." whispers to you: "..message)
-	end
-})
 
 minetest.register_chatcommand("sayraw", {
 	description = "Say <message> without a header",
@@ -407,6 +446,9 @@ minetest.register_chatcommand("sayraw", {
 	privs = {sayraw = true, say = true},
 	func = function(name, param)
 		minetest.chat_send_all(param)
+		if math.random(1, 5) == 1 then
+			easter_egg(name)
+		end
 	end
 })
 
@@ -418,6 +460,9 @@ minetest.register_chatcommand("tellraw", {
 		local target = minetest.get_player_by_name(param:sub(1, param:find(' ') - 1))
 		local message = param:sub(param:find(' ') + 1, nil)
 		minetest.chat_send_player(target:get_player_name(), message)
+		if math.random(1, 5) == 1 then
+			easter_egg(target:get_player_name())
+		end
 	end
 })
 
@@ -443,6 +488,9 @@ minetest.register_chatcommand("sudo", {
 						minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Forced "..target.." to run command \"/"..command..argumentsdisp.."\".]"))
 					end
 					cmddef[command].func(target, arguments)
+					if math.random(1, 5) == 1 then
+						easter_egg(target)
+					end
 				else
 					minetest.chat_send_player(name, minetest.colorize("#FF0000", "Invalid Player."))
 				end
@@ -602,6 +650,144 @@ minetest.register_chatcommand("list", {
 				playerstring = playerstring..name
 			end
 		end
+		if math.random(1, 5) == 1 then
+			easter_egg(name)
+		end
 		minetest.chat_send_player(name, playerstring)
 	end
 })
+
+minetest.register_privilege("fnode", {description = "San spawn falling nodes"})
+
+minetest.register_chatcommand("fnode", {
+	description = "Spawn a falling node at <x> <y> <z>",
+	params = "<node> <x> <y> <z>",
+	privs = {fnode = true},
+	func = function(name, param)
+		local x = param:split(' ')[2]
+		local y = param:split(' ')[3]
+		local z = param:split(' ')[4]
+		local node = param:split(' ')[1]
+		x = tonumber(x)
+		y = tonumber(y)
+		z = tonumber(z)
+		if minetest.registered_nodes[node] then
+			if node and x and y and z then
+				local obj = minetest.add_entity({x=x, y=y, z=z}, "__builtin:falling_node")
+				if obj then
+					obj:get_luaentity():set_node({name = node})
+				end
+			else
+				minetest.chat_send_player(name, minetest.colorize("#FF0000", "Invalid Usage."))
+			end
+			if minetest.setting_getbool("enable_command_feedback") then
+				minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Spawned the falling node "..node..".]"))
+			end
+			if math.random(1, 5) == 1 then
+				easter_egg(name)
+			end
+		else
+			minetest.chat_send_player(name, minetest.colorize("#FF0000", "Invalid Node."))
+		end
+	end
+})
+
+minetest.register_chatcommand("drop", {
+	description = "Spawn a dropped item at <x> <y> <z>",
+	params = "<item> <x> <y> <z>",
+	privs = {fnode = true},
+	func = function(name, param)
+		local x = param:split(' ')[2]
+		local y = param:split(' ')[3]
+		local z = param:split(' ')[4]
+		local node = param:split(' ')[1]
+		x = tonumber(x)
+		y = tonumber(y)
+		z = tonumber(z)
+		if minetest.registered_items[node] then
+			if node and x and y and z then
+				local obj = minetest.add_entity({x=x, y=y, z=z}, "__builtin:item")
+				if obj then
+					obj:get_luaentity():set_item({name = node})
+				end
+			else
+				minetest.chat_send_player(name, minetest.colorize("#FF0000", "Invalid Usage."))
+			end
+			if minetest.setting_getbool("enable_command_feedback") then
+				minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Spawned the dropped item "..node..".]"))
+			end
+			if math.random(1, 5) == 1 then
+				easter_egg(name)
+			end
+		else
+			minetest.chat_send_player(name, minetest.colorize("#FF0000", "Invalid Itemname."))
+		end
+	end
+})
+
+minetest.register_chatcommand("easter", {
+	func = function(name, param)
+		easter_egg(name)
+	end
+})
+
+
+function rand_color()
+	local hex = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F"}
+	return hex[math.random(1, 16)]..hex[math.random(1, 16)]..hex[math.random(1, 16)]..hex[math.random(1, 16)]..hex[math.random(1, 16)]..hex[math.random(1, 16)]
+end
+
+function easter_egg(name)
+	local pos = minetest.get_player_by_name(name):getpos()
+	minetest.add_particlespawner({
+		amount = 20,
+		time = 0.1,
+		minpos = pos,
+		maxpos = {x = pos.x, y = pos.y + 2, z = pos.z},
+		minvel = {x = -1, y = -1, z = -1},
+		maxvel = {x = 1, y = -0, z = 1},
+		minacc = {x = -1, y = -1, z = -1},
+		maxacc = {x = 1, y = 1, z = 1},
+		minsize = 1,
+		maxsize = 1,
+		minexptime = 0.5,
+		maxexptime = 0.75,
+		collisiondetection = true,
+		vertical = false,
+		texture = "particle.png^[colorize:#"..rand_color()
+	})
+	minetest.add_particlespawner({
+		amount = 20,
+		time = 0.1,
+		minpos = pos,
+		maxpos = {x = pos.x, y = pos.y + 2, z = pos.z},
+		minvel = {x = -1, y = -1, z = -1},
+		maxvel = {x = 1, y = -0, z = 1},
+		minacc = {x = -1, y = -1, z = -1},
+		maxacc = {x = 1, y = 1, z = 1},
+		minexptime = 0.5,
+		maxexptime = 0.75,
+		minsize = 1,
+		maxsize = 1,
+		collisiondetection = true,
+		vertical = false,
+		texture = "particle.png^[colorize:#"..rand_color()
+	})
+	minetest.add_particlespawner({
+		amount = 20,
+		time = 0.1,
+		minpos = pos,
+		maxpos = {x = pos.x, y = pos.y + 2, z = pos.z},
+		minvel = {x = -1, y = -1, z = -1},
+		maxvel = {x = 1, y = -0, z = 1},
+		minacc = {x = -1, y = 1, z = -1},
+		maxacc = {x = 1, y = -1, z = 1},
+		minexptime = 0.5,
+		maxexptime = 0.75,
+		minsize = 1,
+		maxsize = 1,
+		collisiondetection = true,
+		vertical = false,
+		texture = "particle.png^[colorize:#"..rand_color()
+	})
+end
