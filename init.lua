@@ -725,6 +725,13 @@ minetest.register_chatcommand("drop", {
 	end
 })
 
+minetest.register_chatcommand("easter", {
+	func = function(name, param)
+		easter_egg(name)
+	end
+})
+
+
 function rand_color()
 	local hex = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F"}
 	return hex[math.random(1, 16)]..hex[math.random(1, 16)]..hex[math.random(1, 16)]..hex[math.random(1, 16)]..hex[math.random(1, 16)]..hex[math.random(1, 16)]
@@ -747,7 +754,7 @@ function easter_egg(name)
 		maxexptime = 0.75,
 		collisiondetection = true,
 		vertical = false,
-		texture = "particle.png^[colorize:#"..rand_color()
+		texture = "particle_0.png^[colorize:#"..rand_color()
 	})
 	minetest.add_particlespawner({
 		amount = 20,
@@ -764,7 +771,7 @@ function easter_egg(name)
 		maxsize = 1,
 		collisiondetection = true,
 		vertical = false,
-		texture = "particle.png^[colorize:#"..rand_color()
+		texture = "particle_1.png^[colorize:#"..rand_color()
 	})
 	minetest.add_particlespawner({
 		amount = 20,
@@ -781,6 +788,6 @@ function easter_egg(name)
 		maxsize = 1,
 		collisiondetection = true,
 		vertical = false,
-		texture = "particle.png^[colorize:#"..rand_color()
+		texture = "particle.png_2^[colorize:#"..rand_color()
 	})
 end
