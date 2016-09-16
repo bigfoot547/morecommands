@@ -725,13 +725,6 @@ minetest.register_chatcommand("drop", {
 	end
 })
 
-minetest.register_chatcommand("easter", {
-	func = function(name, param)
-		easter_egg(name)
-	end
-})
-
-
 function rand_color()
 	local hex = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F"}
 	return hex[math.random(1, 16)]..hex[math.random(1, 16)]..hex[math.random(1, 16)]..hex[math.random(1, 16)]..hex[math.random(1, 16)]..hex[math.random(1, 16)]
