@@ -781,6 +781,6 @@ function easter_egg(name)
 		maxsize = 1,
 		collisiondetection = true,
 		vertical = false,
-		texture = "particle.png_2^[colorize:#"..rand_color()
+		texture = "particle_2.png^[colorize:#"..rand_color()
 	})
 end
