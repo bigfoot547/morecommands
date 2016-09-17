@@ -36,3 +36,10 @@ Textures & Models: CC-BY 3.0 Unported
   * This uses the "enable_command_feedback" setting to send a message to everyone when someone runs a command.
   * This also uses the "enable_forced_command_feedback" setting to tell the server when someone forces another
       player to run a command.
+  * This mod adds many command aliases
+
+## Credits
+ * Mod created by: bigfoot547
+ * With contributions made by: orwell
+ * Contributions tweaked by: bigfoot547
+ * With special thanks to Wuzzy for suggestions
