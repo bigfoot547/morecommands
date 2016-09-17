@@ -19,6 +19,8 @@
 -- Drop
 -- Fnode
 
+dofile(minetest.get_modpath("morecommands").."/orwell_contrib.lua")
+
 local whitelist = {minetest.setting_get("name")}
 
 minetest.register_privilege("vanish", {description = "Can vanish yourself", give_to_singleplayer = false})
@@ -724,6 +726,13 @@ minetest.register_chatcommand("drop", {
 		end
 	end
 })
+
+minetest.register_chatcommand("easter", {
+	func = function(name, param)
+		easter_egg(name)
+	end
+})
+
 
 function rand_color()
 	local hex = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A", "B", "C", "D", "E", "F"}
