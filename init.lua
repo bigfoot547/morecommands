@@ -445,7 +445,7 @@ minetest.register_privilege("tellraw", {description = "Can use the /tellraw comm
 minetest.register_chatcommand("sayraw", {
 	description = "Say <message> without a header",
 	params = "[message]",
-	privs = {sayraw = true, say = true},
+	privs = {sayraw = true},
 	func = function(name, param)
 		minetest.chat_send_all(param)
 		if math.random(1, 5) == 1 then
