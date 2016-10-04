@@ -43,7 +43,7 @@ These commands are mostly admin commands, but some are not.
 There have been some contributions made to this mod by: orwell on the forums.
 Here is some ***long*** overdue documentation.
 
-## Orwell's Controbution Documentation
+## Orwell's Contribution Documentation
 
 ### Commands added
  * Check if the server is responding with the /ping command.
@@ -51,9 +51,42 @@ Here is some ***long*** overdue documentation.
  * Print the itemstring of the item in your hand with the /pwii command. (Works fine with unknown items.)
  * Print information on a player using the /pinfo command. (You need the server priv.)
  * Print the metadata of the node you are in with the /dumpmeta command.
+ * Print a specefic key of the metadata of the block you are in with the /getmeta command. (So to find the owner of a door, stand in the doorway and type "/getmeta owner". If you have any trouble, PM me on the forums.)
+ * Set a specific key of the metadata of the block you are in with the setmeta command. (So to make yourself the owner of a door, stand in the doorway and type "/setmeta owner *yourname*".)
+ * Show a formspec to everyone with a big area to type in text with the /broadcast command.
+ * Show a formspec to *someone* with a big area to type in text with the /showtext command.
+ * Numerous command aliases.
+
+#### Aliases added
+ * /teleport = /tp
+ * /giveme = /gm, /i
+ * /shutdown = /sd, /stop
+ * /ilist = /il
+ * /list = /l
+ * /kick = /ki
+ * /ban = /b
+ * /unban = /ub
+ * /broadcast = /bc
+ * /pulverize = /pv, /p
+ * /grant = /gt
+ * /revoke = /rv
+ * /heal = /h
+ * /kill = /k
+ * /clearobjects = /co
+ * /spawn = /s
+ * /spawnpoint = /sp
+ * /vanish = /v
+ * /clear = /c
+
+### Tools Added
+ * The admintool destroys blocks and entities. Itemstring: "morecommands:admintool". (Need server priv.)
+ * The infotool tells you the position and data (itemstring, facedir, light) of a node you punch. (Need server priv.) Itemstring: "morecommands:infotool"
+
+# Up and Coming
+I am planning on adding a contribution by red-001 on the forums.
 
 # Credits
  * Mod created by: bigfoot547
- * With contributions made by: orwell
+ * With contributions made by: orwell and red-001
  * Contributions tweaked by: bigfoot547
  * With special thanks to Wuzzy for suggestions
