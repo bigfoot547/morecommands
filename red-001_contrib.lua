@@ -17,7 +17,7 @@ minetest.register_chatcommand("yaw", {
 })
 
 -- Setpitch by red-001
-minetest.register_chatcommand("setpitch", {
+minetest.register_chatcommand("pitch", {
    params = "<pitch>",
    description = "Set player pitch",
    func = function(name, param)
