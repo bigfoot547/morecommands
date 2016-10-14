@@ -83,7 +83,7 @@ Here is some ***long*** overdue documentation.
  * The infotool tells you the position and data (itemstring, facedir, light) of a node you punch. (Need server priv.) Itemstring: "morecommands:infotool"
 
 # Up and Coming
-I am planning on adding a contribution by red-001 on the forums.
+I am wanting to add print statements to keep track of commands in the terminal.
 
 # Credits
  * Mod created by: bigfoot547
