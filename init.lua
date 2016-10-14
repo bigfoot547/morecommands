@@ -19,7 +19,10 @@
 -- Drop
 -- Fnode
 
+-- TODO: Add print statements.
+
 dofile(minetest.get_modpath("morecommands").."/orwell_contrib.lua")
+dofile(minetest.get_modpath("morecommands").."/red-001_contrib.lua")
 
 local whitelist = {minetest.setting_get("name")}
 
@@ -49,6 +52,7 @@ minetest.register_chatcommand("vanish", {
 					if minetest.setting_getbool("enable_command_feedback") then
 						minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Vanished "..targetname.."]"))
 					end
+					print("[morecommands] "..name..": vanished "..targetname..".")
 					if math.random(1, 5) == 1 then
 						easter_egg(targetname)
 					end
@@ -61,6 +65,7 @@ minetest.register_chatcommand("vanish", {
 					if minetest.setting_getbool("enable_command_feedback") then
 						minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Unvanished "..targetname.."]"))
 					end
+					print("[morecommands] "..name..": unvanished "..targetname..".")
 					if math.random(1, 5) == 1 then
 						easter_egg(targetname)
 					end
@@ -99,6 +104,7 @@ minetest.register_chatcommand("nick", {
 		if minetest.setting_getbool("enable_command_feedback") then
 			minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Nicknamed himself to \""..param.."\".]"))
 		end
+		print("[morecommands] "..name..": nicknamed self \""..param.."\".")
 	end
 })
 
@@ -243,9 +249,8 @@ minetest.register_chatcommand("kill", {
 			target = minetest.get_player_by_name(param)
 		end
 		
-		targetname = target:get_player_name()
-		
 		if target then
+			targetname = target:get_player_name()
 			target:set_hp(0)
 			minetest.chat_send_player(name, "Killed " .. targetname .. ".")
 			if minetest.setting_getbool("enable_command_feedback") then
