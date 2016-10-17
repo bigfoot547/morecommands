@@ -94,15 +94,26 @@ minetest.register_chatcommand("nick", {
 	privs = {nick = true},
 	func = function(name, param)
 		local target = minetest.get_player_by_name(name)
-		target:set_nametag_attributes({text = param})
-		if param == "" then
-			target:set_nametag_attributes({text = name})
+		if minetest.get_modpath("rank") then
+			target:set_nametag_attributes({text = "                                          ["..color(rank_colors[ranks[name]])..ranks[name]..color("#ffffff").."]: "..param})
+			if param == "" then
+				target:set_nametag_attributes({text = "                                          ["..color(rank_colors[ranks[name]])..ranks[name]..color("#ffffff").."]: "..name})
+			end
+		else
+			target:set_nametag_attributes({text = param})
+			if param == "" then
+				target:set_nametag_attributes({text = name})
+			end
 		end
 		if math.random(1, 5) == 1 then
 			easter_egg(name)
 		end
 		if minetest.setting_getbool("enable_command_feedback") then
-			minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Nicknamed himself to \""..param.."\".]"))
+			if param == "" then
+				minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Reset "..name.."'s nickname.]"))
+			else
+				minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Nicknamed "..name.." to \""..param.."\".]"))
+			end
 		end
 		print("[morecommands] "..name..": nicknamed self \""..param.."\".")
 	end

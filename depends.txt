@@ -1,2 +1,4 @@
 default
+beds
 mesecons_commandblock?
+rank?
