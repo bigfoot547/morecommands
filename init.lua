@@ -649,20 +649,48 @@ minetest.register_on_shutdown(function()
 	save()
 end)
 
-minetest.register_on_joinplayer(function(player)
+--minetest.register_on_joinplayer(function(player)
+	--local found = true
+	--if minetest.setting_getbool("whitelist") and player:get_player_name() ~= "singleplayer" then
+		--found = false
+		--for i = 1, #whitelist do
+			--if player:get_player_name() == whitelist[i] then
+				--found = true 
+				--break
+			--end
+		--end
+	--end
+	--if not found then
+		--minetest.kick_player(player:get_player_name(), "Your name is not on the whitelist.\nThe server has been notified.")
+		--minetest.chat_send_all(minetest.colorize("#FFBF00", "A player, "..player:get_player_name()..", has been kicked from the server because he is not on the whitelist."))
+	--end
+--end)
+
+minetest.register_on_prejoinplayer(function(name, ip)
 	local found = true
-	if minetest.setting_getbool("whitelist") and player:get_player_name() ~= "singleplayer" then
+	if minetest.setting_getbool("whitelist") and name ~= "singleplayer" then
 		found = false
 		for i = 1, #whitelist do
-			if player:get_player_name() == whitelist[i] then
+			if name == whitelist[i] then
 				found = true 
 				break
 			end
 		end
 	end
 	if not found then
-		minetest.kick_player(player:get_player_name(), "Your name is not on the whitelist.\nThe server has been notified.")
-		minetest.chat_send_all(minetest.colorize("#FFBF00", "A player, "..player:get_player_name()..", has been kicked from the server because he is not on the whitelist."))
+		if minetest.get_modpath("rank") then
+			local key, value
+			for key, value in pairs(ranks) do
+				if value == "moderator" or value == "admin" and minetest.get_player_by_name(key) then
+					minetest.chat_send_player(key, minetest.colorize("#FFBF00", "[")..minetest.colorize("#FF0000", "Admin/Moderator Only")..minetest.colorize("#FFBF00", "] A player, "..name.." ("..ip.."), has been been disallowed to join the server because "..name.." is not on the whitelist."))
+				end
+			end
+		else
+			if minetest.setting_get("name") then
+				minetest.chat_send_all(minetest.colorize("#FFBF00", "[")..minetest.colorize("#FF0000", "Owner Only")..minetest.colorize("#FFBF00", "] A player, "..name.." ("..ip.."), has been been disallowed to join the server because "..name.." is not on the whitelist."))
+			end
+		end
+		return "Your name is not on the whitelist.\nThe server has been notified and saw your ip: "..ip.."."
 	end
 end)
 
