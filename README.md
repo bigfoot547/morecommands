@@ -1,7 +1,7 @@
 # morecommands
 
 ## Description
-This is a mod for minetest which adds 20 different commands.
+This is a mod for minetest which adds a lot of different commands.
 These commands are mostly admin commands, but some are not.
 
 ### This mod will allow you to:
@@ -26,6 +26,8 @@ These commands are mostly admin commands, but some are not.
   * Force a player to run a command using the /sudo command
   * Set a server whitelist using the /whitelist command
   * List the players on the server using the /list command
+  * Go up a specified ammount of layers with the /up command
+  * Go down a specified ammount of layers with the /down command
 
 ## Licence
 **Code: LGPL v2.1**
