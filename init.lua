@@ -783,6 +783,78 @@ minetest.register_chatcommand("drop", {
 	end
 })
 
+minetest.register_chatcommand("up", {
+	description = "Go up [levels] number of levels.",
+	params = "[levels]",
+	privs = {teleport = true},
+	func = function(name, param)
+		local levels = tonumber(param) or 1
+		local pos = minetest.get_player_by_name(name):getpos()
+		
+		local i, j = 0, 1
+		local node
+		
+		if not minetest.get_player_by_name(name) then
+			print(name .. " is not a client.")
+			return false
+		end
+		
+		j = math.ceil(pos.y) + 1
+		
+		for i = 1, levels do
+			while true do
+				node = minetest.get_node({x = pos.x, y = j, z = pos.z})
+				if node.name == "ignore" then
+					minetest.chat_send_player(name, minetest.colorize("#FFFF00", "No nodes found untill unloaded chunks."))
+					return false
+				elseif node and minetest.registered_nodes[node.name].walkable and minetest.get_node({x = pos.x, y = j + 1, z = pos.z}).name == "air" and minetest.get_node({x = pos.x, y = j + 2, z = pos.z}).name == "air" then
+					minetest.chat_send_player(name, "Found a node at y = "..math.ceil(tostring(j + 1))..".")
+					minetest.get_player_by_name(name):setpos({x = pos.x, y = math.ceil(j + 1), z = pos.z})
+					j = j + 1
+					break
+				end
+				j = j + 1
+			end
+		end
+	end
+})
+
+minetest.register_chatcommand("down", {
+	description = "Go down [levels] number of levels.",
+	params = "[levels]",
+	privs = {teleport = true},
+	func = function(name, param)
+		local levels = tonumber(param) or 1
+		local pos = minetest.get_player_by_name(name):getpos()
+		
+		local i, j
+		local node
+		
+		if not minetest.get_player_by_name(name) then
+			print(name .. " is not a client.")
+			return false
+		end
+		
+		j = math.ceil(pos.y) - 2
+		
+		for i = 1, levels do
+			while true do
+				node = minetest.get_node({x = pos.x, y = j, z = pos.z})
+				if node.name == "ignore" then
+					minetest.chat_send_player(name, minetest.colorize("#FFFF00", "No nodes found untill unloaded chunks."))
+					return false
+				elseif node and minetest.registered_nodes[node.name].walkable and minetest.get_node({x = pos.x, y = j + 1, z = pos.z}).name == "air" and minetest.get_node({x = pos.x, y = j + 2, z = pos.z}).name == "air" then
+					minetest.chat_send_player(name, "Found a node at y = "..math.ceil(tostring(j + 1))..".")
+					minetest.get_player_by_name(name):setpos({x = pos.x, y = math.ceil(j + 1), z = pos.z})
+					j = j - 1
+					break
+				end
+				j = j - 1
+			end
+		end
+	end
+})
+
 --minetest.register_chatcommand("easter", {
 --	func = function(name, param)
 --		easter_egg(name)
