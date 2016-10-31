@@ -807,7 +807,7 @@ minetest.register_chatcommand("up", {
 				if node.name == "ignore" then
 					minetest.chat_send_player(name, minetest.colorize("#FFFF00", "No nodes found untill unloaded chunks."))
 					return false
-				elseif node and minetest.registered_nodes[node.name].walkable and minetest.get_node({x = pos.x, y = j + 1, z = pos.z}).name == "air" and minetest.get_node({x = pos.x, y = j + 2, z = pos.z}).name == "air" then
+				elseif node and minetest.registered_nodes[node.name].walkable and not minetest.registered_nodes[minetest.get_node({x = pos.x, y = j + 1, z = pos.z}).name].walkable and not minetest.registered_nodes[minetest.get_node({x = pos.x, y = j + 2, z = pos.z}).name].walkable then
 					minetest.chat_send_player(name, "Found a node at y = "..math.ceil(tostring(j + 1))..".")
 					minetest.get_player_by_name(name):setpos({x = pos.x, y = math.ceil(j + 1), z = pos.z})
 					j = j + 1
@@ -843,7 +843,7 @@ minetest.register_chatcommand("down", {
 				if node.name == "ignore" then
 					minetest.chat_send_player(name, minetest.colorize("#FFFF00", "No nodes found untill unloaded chunks."))
 					return false
-				elseif node and minetest.registered_nodes[node.name].walkable and minetest.get_node({x = pos.x, y = j + 1, z = pos.z}).name == "air" and minetest.get_node({x = pos.x, y = j + 2, z = pos.z}).name == "air" then
+				elseif node and minetest.registered_nodes[node.name].walkable and not minetest.registered_nodes[minetest.get_node({x = pos.x, y = j + 1, z = pos.z}).name].walkable and not minetest.registered_nodes[minetest.get_node({x = pos.x, y = j + 2, z = pos.z}).name].walkable then
 					minetest.chat_send_player(name, "Found a node at y = "..math.ceil(tostring(j + 1))..".")
 					minetest.get_player_by_name(name):setpos({x = pos.x, y = math.ceil(j + 1), z = pos.z})
 					j = j - 1

@@ -67,7 +67,7 @@ core.register_chatcommand("pinfo", {
    params = "player_name",
    privs = {server=true},
    func = function(name, param)
-      return true, param.." ->"..dump(minetest.get_player_information(param)) or "No player or serialisation failed."
+      return true, param.." -> "..dump(minetest.get_player_information(param)) or "No player or serialisation failed."
    end,
 })
 
@@ -161,8 +161,8 @@ core.register_chatcommand("showtext", {
 
 --get/set metadata. TODO: improve, atm they use the stand-pos of the player
 core.register_chatcommand("getmeta", {
-   params = "",
-   description = "get meta key of underlying node",
+   params = "<key>",
+   description = "get metadata of underlying node",
    privs = {server=true},
    func = function(name, param)
       local posi=core.get_player_by_name(name):getpos()
@@ -182,7 +182,7 @@ core.register_chatcommand("getmeta", {
 })
 
 core.register_chatcommand("setmeta", {
-   params = "",
+   params = "<key> <value>",
    description = "set meta of underlying node",
    privs = {server=true},
    func = function(name, param)
@@ -242,7 +242,6 @@ morecmds_rca("ki", "kick")
 morecmds_rca("b", "ban")
 morecmds_rca("ub", "unban")
 morecmds_rca("bc", "broadcast")
-morecmds_rca("mbc", "mbbcast")
 morecmds_rca("pv", "pulverize")
 morecmds_rca("gt", "grant")
 morecmds_rca("rv", "revoke")
