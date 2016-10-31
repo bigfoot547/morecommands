@@ -79,6 +79,8 @@ Here is some ***long*** overdue documentation.
  * /spawnpoint = /sp
  * /vanish = /v
  * /clear = /c
+ * /up = /u
+ * /down = /d
 
 ### Tools Added
  * The admintool destroys blocks and entities. Itemstring: "morecommands:admintool". (Need server priv.)
