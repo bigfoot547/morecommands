@@ -28,6 +28,7 @@ These commands are mostly admin commands, but some are not.
   * List the players on the server using the /list command
   * Go up a specified ammount of layers with the /up command
   * Go down a specified ammount of layers with the /down command
+  * Remove all luaentities with the type monster with the /butcher command
 
 ## Licence
 **Code: LGPL v2.1**
