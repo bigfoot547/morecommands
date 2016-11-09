@@ -855,6 +855,32 @@ minetest.register_chatcommand("down", {
 	end
 })
 
+function G(text)
+	return minetest.colorize("#00FB00", text)
+end
+function R(text)
+	return minetest.colorize("#FF0000", text)
+end
+
+minetest.register_chatcommand("butcher", {
+	func = function(name, param)
+		local count, tot = 0, 0
+		local key, val
+		local start, ennd, mid
+		start = os.clock()
+		for key, val in pairs(minetest.luaentities) do
+			if minetest.registered_entities[minetest.luaentities[key].name].type == "monster" then
+				minetest.luaentities[key].object:remove()
+				count = count + 1
+			end
+			tot = tot + 1
+		end
+		ennd = os.clock()
+		mid = ennd - start
+		minetest.chat_send_player(name, G("Removed ")..R(tostring(count))..G(" / ")..R(tostring(tot))..G(" luaentities in ")..R(tostring(math.floor(mid * 1000)))..G(" ms."))
+	end
+})
+
 --minetest.register_chatcommand("easter", {
 --	func = function(name, param)
 --		easter_egg(name)
