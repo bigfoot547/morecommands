@@ -862,22 +862,60 @@ function R(text)
 	return minetest.colorize("#FF0000", text)
 end
 
+minetest.register_privilege("butcher", {description = "Can use the /butcher command."})
+
 minetest.register_chatcommand("butcher", {
+	description = "Remove entities of a specific type. Type "..minetest.colorize("#ffff00", "/butcher -h").." for more information.",
+	params = "[-afhimM]",
+	privs = {butcher = true},
 	func = function(name, param)
+		if param:sub(2, 2) == 'h' then
+			minetest.chat_send_player(name, "-a: Remove all entities")
+			minetest.chat_send_player(name, "-f: Remove all farm animals")
+			minetest.chat_send_player(name, "-h: Show this help message")
+			minetest.chat_send_player(name, "-i: Remove all dropped items")
+			minetest.chat_send_player(name, "-m: Remove all mobs")
+			minetest.chat_send_player(name, "-M "..minetest.colorize("#00FFFF", "[Default]")..": Remove all monsters")
+			minetest.chat_send_player(name, "If multiple options specified, only the first one will be executed")
+			return
+		end
+		local option = param:sub(2, 2)
+		if option == "" and param == "" then option = "M" end
+		local test
 		local count, tot = 0, 0
 		local key, val
 		local start, ennd, mid
 		start = os.clock()
 		for key, val in pairs(minetest.luaentities) do
-			if minetest.registered_entities[minetest.luaentities[key].name].type == "monster" then
+			tot = tot + 1
+		end
+		for key, val in pairs(minetest.luaentities) do
+			local def = minetest.registered_entities[minetest.luaentities[key].name]
+			if option == "M" then
+				test = (def.type =="monster")
+			elseif option == "a" then
+				test = true
+			elseif option == "f" then
+				test = (def.type == "animal")
+			elseif option == "i" then
+				test = (val.name == "__builtin:item")
+			elseif option == "m" then
+				test = (def.type == "monster" or def.type == "animal")
+			else
+				minetest.chat_send_player(name, minetest.colorize("#FF0000", "Invalid option."))
+				return
+			end
+			if test then
 				minetest.luaentities[key].object:remove()
 				count = count + 1
 			end
-			tot = tot + 1
 		end
 		ennd = os.clock()
 		mid = ennd - start
-		minetest.chat_send_player(name, G("Removed ")..R(tostring(count))..G(" / ")..R(tostring(tot))..G(" luaentities in ")..R(tostring(math.floor(mid * 1000)))..G(" ms."))
+		minetest.chat_send_player(name, G("Removed ")..R(tostring(count))..G(" / ")..R(tostring(tot))..G(" luaentities in ")..R(tostring(math.floor(mid * 1000000)))..G(" µs."))
+		if minetest.setting_getbool("enable_command_feedback") then
+			minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Removed "..tostring(count).." / "..tostring(tot).." luaentities with the argument: "..option..".]"))
+		end
 	end
 })
 
