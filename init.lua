@@ -18,12 +18,16 @@
 -- List
 -- Drop
 -- Fnode
+-- Butcher
+-- Up
+-- Down
 
 -- TODO: Add print statements.
 
 dofile(minetest.get_modpath("morecommands").."/orwell_contrib.lua")
 dofile(minetest.get_modpath("morecommands").."/red-001_contrib.lua")
 
+local start = os.clock()
 local whitelist = {minetest.setting_get("name")}
 
 minetest.register_privilege("vanish", {description = "Can vanish yourself", give_to_singleplayer = false})
@@ -298,25 +302,48 @@ minetest.register_chatcommand("spawnpoint", {
 
 minetest.register_privilege("clear", {description = "Can clear player's inventory", give_to_singleplayer = false})
 
+local function clear(pname, listname, itemname)
+	local inv = minetest.get_inventory({type = "player", name = pname})
+	local player = minetest.get_player_by_name(pname)
+	if not player then return nil end
+	if not inv then return nil end
+	local list = inv:get_list(listname)
+	if not list then return nil end
+	local index, stack
+	local count = 0
+	local ss
+	
+	for index, stack in pairs(list) do
+		if itemname == "*" then ss = stack:get_name() else ss = itemname end
+		if (not inv:get_stack(listname, index):is_empty()) and stack:get_name() == ss then
+			inv:set_stack(listname, index, ItemStack(""))
+			count = count + 1
+		end
+	end
+	return count
+end
+
 minetest.register_chatcommand("clear", {
 	description = "Clear [player]'s inventory",
-	params = "[player]",
+	params = "[player] [stackstring]",
 	privs = {clear = true},
 	func = function(name, param)
 		local user = minetest.get_player_by_name(name)
-		local target = minetest.get_player_by_name(param)
+		local target = minetest.get_player_by_name(param:split(' ')[1] or "")
+		local itemstring = param:split(' ')[2] or "*"
 		local cleareditems
 		if param == "" then
 			target = user
 		end
 		if target then
-			target:get_inventory():set_list("main", {})
-			target:get_inventory():set_list("craft", {})
-			target:get_inventory():set_list("craftpreview", {})
-			target:get_inventory():set_list("craftresult", {})
-			minetest.chat_send_player(name, "Cleared "..target:get_player_name().."'s inventory.")
+			local count = 0
+			count = count + (clear(name, "main", itemstring) or 0)
+			count = count + (clear(name, "craft", itemstring) or 0)
+			count = count + (clear(name, "craftpreview", itemstring) or 0)
+			count = count + (clear(name, "craftresult", itemstring) or 0)
+			minetest.chat_send_player(name, "Cleared inventory of "..target:get_player_name()..", emptied "..tostring(count).." stack(s).")
 			if minetest.setting_getbool("enable_command_feedback") then
-				minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Cleared "..target:get_player_name().."'s inventory.]"))
+				minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Cleared inventory of "..target:get_player_name()..", emptied "..tostring(count).." stack(s).]"))
 			end
 			if math.random(1, 5) == 1 then
 				easter_egg(target:get_player_name())
@@ -985,3 +1012,5 @@ function easter_egg(name)
 		texture = "particle_2.png^[colorize:#"..rand_color()
 	})
 end
+
+print("[morecommands] Mod loaded in "..tostring(math.floor((os.clock() - start)*1000000)).."µs.")
