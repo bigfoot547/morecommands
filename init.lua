@@ -1,3 +1,5 @@
+vanished_players = {}
+
 -- Kill
 -- Spawpoint
 -- Clear
@@ -35,12 +37,17 @@ minetest.register_privilege("vanishothers", {description = "Can vanish others", 
 
 minetest.register_chatcommand("vanish", {
 	description = "Vanish <player>",
-	params = "vanish|unvanish <player>",
+	params = "[player]",
 	privs = {vanish = true},
 	func = function(name, param)
-		local action = param:split(' ')[1]
-		local targetname = param:split(' ')[2]
+		local targetname = (param:split(' ')[1] or name)
 		local allowed = false
+		local action
+		if vanished_players[name] then
+			action = "unvanish"
+		else
+			action = "vanish"
+		end
 		if minetest.check_player_privs(name, {vanishothers = true}) and (name ~= targetname) then
 			allowed = true
 		elseif minetest.check_player_privs(name, {vanishothers = false}) and name == targetname then
@@ -53,6 +60,7 @@ minetest.register_chatcommand("vanish", {
 			if target and allowed then
 				action = action:lower()
 				if action == "vanish" then
+					vanished_players[name] = true
 					if minetest.setting_getbool("enable_command_feedback") then
 						minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Vanished "..targetname.."]"))
 					end
@@ -66,6 +74,7 @@ minetest.register_chatcommand("vanish", {
 					})
 					target:set_nametag_attributes({color = {a = 0, r = 255, g = 255, b = 255}})
 				elseif action == "unvanish" then
+					vanished_players[name] = false
 					if minetest.setting_getbool("enable_command_feedback") then
 						minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Unvanished "..targetname.."]"))
 					end
@@ -288,14 +297,14 @@ minetest.register_chatcommand("spawnpoint", {
 	privs = {spawnpoint = true},
 	func = function(name, param)
 		local player = minetest.get_player_by_name(name)
-		beds.spawn[name] = player:getpos()
+		beds.spawn[name] = vector.round(player:getpos())
 		beds.save_spawns()
 		minetest.chat_send_player(name, "Spawnpoint set.")
 		if math.random(1, 5) == 1 then
 			easter_egg(player:get_player_name())
 		end
 		if minetest.setting_getbool("enable_command_feedback") then
-			minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Set "..name.."'s spawnpoint to "..minetest.pos_to_string(player:getpos()).."]"))
+			minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Set "..name.."'s spawnpoint to "..minetest.pos_to_string(vector.round(player:getpos())).."]"))
 		end
 	end
 })
@@ -341,6 +350,15 @@ minetest.register_chatcommand("clear", {
 			count = count + (clear(name, "craft", itemstring) or 0)
 			count = count + (clear(name, "craftpreview", itemstring) or 0)
 			count = count + (clear(name, "craftresult", itemstring) or 0)
+			if minetest.get_modpath("unified_inventory") then
+				count = count + (clear(name, "bag1", itemstring))
+				count = count + (clear(name, "bag2", itemstring))
+				count = count + (clear(name, "bag3", itemstring))
+				count = count + (clear(name, "bag4", itemstring))
+			end
+			if minetest.get_modpath("3d_armor") then
+				count = count + (clear(name, "armor",  itemstring))
+			end
 			minetest.chat_send_player(name, "Cleared inventory of "..target:get_player_name()..", emptied "..tostring(count).." stack(s).")
 			if minetest.setting_getbool("enable_command_feedback") then
 				minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Cleared inventory of "..target:get_player_name()..", emptied "..tostring(count).." stack(s).]"))
