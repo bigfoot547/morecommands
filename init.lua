@@ -65,7 +65,7 @@ minetest.register_chatcommand("vanish", {
 						minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Vanished "..targetname.."]"))
 					end
 					print("[morecommands] "..name..": vanished "..targetname..".")
-					if math.random(1, 5) == 1 then
+					if math.random(1, 5) == 1 and minetest.setting_getbool("morecommands_enable_particles") then
 						easter_egg(targetname)
 					end
 					target:set_properties({
@@ -79,7 +79,7 @@ minetest.register_chatcommand("vanish", {
 						minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Unvanished "..targetname.."]"))
 					end
 					print("[morecommands] "..name..": unvanished "..targetname..".")
-					if math.random(1, 5) == 1 then
+					if math.random(1, 5) == 1 and minetest.setting_getbool("morecommands_enable_particles") then
 						easter_egg(targetname)
 					end
 					target:set_properties({
@@ -118,7 +118,7 @@ minetest.register_chatcommand("nick", {
 				target:set_nametag_attributes({text = name})
 			end
 		end
-		if math.random(1, 5) == 1 then
+		if math.random(1, 5) == 1 and minetest.setting_getbool("morecommands_enable_particles") then
 			easter_egg(name)
 		end
 		if minetest.setting_getbool("enable_command_feedback") then
@@ -151,7 +151,7 @@ minetest.register_chatcommand("speed", {
 					if minetest.setting_getbool("enable_command_feedback") then
 						minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Set "..name.."'s speed to "..tostring(speed)..".]"))
 					end
-					if math.random(1, 5) == 1 then
+					if math.random(1, 5) == 1 and minetest.setting_getbool("morecommands_enable_particles") then
 						easter_egg(target:get_player_name())
 					end
 				else
@@ -162,7 +162,7 @@ minetest.register_chatcommand("speed", {
 				if minetest.setting_getbool("enable_command_feedback") then
 					minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Reset "..name.."'s speed.]"))
 				end
-				if math.random(1, 5) == 1 then
+				if math.random(1, 5) == 1 and minetest.setting_getbool("morecommands_enable_particles") then
 					easter_egg(target:get_player_name())
 				end
 			else
@@ -193,7 +193,7 @@ minetest.register_chatcommand("jump", {
 					if minetest.setting_getbool("enable_command_feedback") then
 						minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Set "..name.."'s jump height to "..tostring(jump)..".]"))
 					end
-					if math.random(1, 5) == 1 then
+					if math.random(1, 5) == 1 and minetest.setting_getbool("morecommands_enable_particles") then
 						easter_egg(name)
 					end
 				else
@@ -204,7 +204,7 @@ minetest.register_chatcommand("jump", {
 				if minetest.setting_getbool("enable_command_feedback") then
 					minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Reset "..name.."'s jump height.]"))
 				end
-				if math.random(1, 5) == 1 then
+				if math.random(1, 5) == 1 and minetest.setting_getbool("morecommands_enable_particles") then
 					easter_egg(name)
 				end
 			else
@@ -235,7 +235,7 @@ minetest.register_chatcommand("gravity", {
 					if minetest.setting_getbool("enable_command_feedback") then
 						minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Set "..name.."'s gravity to "..tostring(gravity)..".]"))
 					end
-					if math.random(1, 5) == 1 then
+					if math.random(1, 5) == 1 and minetest.setting_getbool("morecommands_enable_particles") then
 						easter_egg(name)
 					end
 				else
@@ -246,7 +246,7 @@ minetest.register_chatcommand("gravity", {
 				if minetest.setting_getbool("enable_command_feedback") then
 					minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Reset "..name.."'s gravity.]"))
 				end
-				if math.random(1, 5) == 1 then
+				if math.random(1, 5) == 1 and minetest.setting_getbool("morecommands_enable_particles") then
 					easter_egg(name)
 				end
 			else
@@ -280,7 +280,7 @@ minetest.register_chatcommand("kill", {
 			if minetest.setting_getbool("enable_command_feedback") then
 				minetest.chat_send_all(minetest.colorize("#7F7F7F", "[".. name ..": Killed ".. targetname ..".]"))
 			end
-			if math.random(1, 5) == 1 then
+			if math.random(1, 5) == 1 and minetest.setting_getbool("morecommands_enable_particles") then
 				easter_egg(targetname)
 			end
 		else
@@ -300,7 +300,7 @@ minetest.register_chatcommand("spawnpoint", {
 		beds.spawn[name] = vector.round(player:getpos())
 		beds.save_spawns()
 		minetest.chat_send_player(name, "Spawnpoint set.")
-		if math.random(1, 5) == 1 then
+		if math.random(1, 5) == 1 and minetest.setting_getbool("morecommands_enable_particles") then
 			easter_egg(player:get_player_name())
 		end
 		if minetest.setting_getbool("enable_command_feedback") then
@@ -335,17 +335,21 @@ end
 minetest.register_chatcommand("clear", {
 	description = "Clear [player]'s inventory",
 	params = "[player] [stackstring]",
-	privs = {clear = true},
+	privs = {},
 	func = function(name, param)
 		local user = minetest.get_player_by_name(name)
 		local target = minetest.get_player_by_name(param:split(' ')[1] or "")
 		local itemstring = param:split(' ')[2] or "*"
-		local cleareditems
+		
 		if param == "" then
 			target = user
 		end
+		
 		if target then
 			local count = 0
+			if not ((target:get_player_name() == user:get_player_name()) or minetest.check_player_privs(name, {clear = true})) then
+				return false, minetest.colorize("#FF0000", "You need the \"clear\" privilege to clear other inventories.")
+			end
 			count = count + (clear(name, "main", itemstring) or 0)
 			count = count + (clear(name, "craft", itemstring) or 0)
 			count = count + (clear(name, "craftpreview", itemstring) or 0)
@@ -363,7 +367,7 @@ minetest.register_chatcommand("clear", {
 			if minetest.setting_getbool("enable_command_feedback") then
 				minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Cleared inventory of "..target:get_player_name()..", emptied "..tostring(count).." stack(s).]"))
 			end
-			if math.random(1, 5) == 1 then
+			if math.random(1, 5) == 1 and minetest.setting_getbool("morecommands_enable_particles") then
 				easter_egg(target:get_player_name())
 			end
 		else
@@ -405,7 +409,7 @@ minetest.register_chatcommand("spawn", {
 			if minetest.setting_getbool("enable_command_feedback") then
 				minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Teleported to spawnpoint.]"))
 			end
-			if math.random(1, 5) == 1 then
+			if math.random(1, 5) == 1 and minetest.setting_getbool("morecommands_enable_particles") then
 				easter_egg(name)
 			end
 		else
@@ -431,7 +435,7 @@ minetest.register_chatcommand("hp", {
 			if minetest.setting_getbool("enable_command_feedback") then
 				minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Set "..target:get_player_name().."'s hp.]"))
 			end
-			if math.random(1, 5) == 1 then
+			if math.random(1, 5) == 1 and minetest.setting_getbool("morecommands_enable_particles") then
 				easter_egg(target:get_player_name())
 			end
 		elseif target and not hp then
@@ -439,7 +443,7 @@ minetest.register_chatcommand("hp", {
 			if minetest.setting_getbool("enable_command_feedback") then
 				minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Queried "..target:get_player_name().."'s hp.]"))
 			end
-			if math.random(1, 5) == 1 then
+			if math.random(1, 5) == 1 and minetest.setting_getbool("morecommands_enable_particles") then
 				easter_egg(target:get_player_name())
 			end
 		else
@@ -465,7 +469,7 @@ minetest.register_chatcommand("heal", {
 				minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Healed "..param..".]"))
 				if param ~= name then minetest.chat_send_player(param, minetest.colorize("#FFFF00", name.." healed you!")) end
 			end
-			if math.random(1, 5) == 1 then
+			if math.random(1, 5) == 1 and minetest.setting_getbool("morecommands_enable_particles") then
 				easter_egg(param)
 			end
 		else
@@ -491,7 +495,7 @@ minetest.register_chatcommand("breath", {
 			if minetest.setting_getbool("enable_command_feedback") then
 				minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Set "..target:get_player_name().."'s breath.]"))
 			end
-			if math.random(1, 5) == 1 then
+			if math.random(1, 5) == 1 and minetest.setting_getbool("morecommands_enable_particles") then
 				easter_egg(target:get_player_name())
 			end
 		elseif target and not hp then
@@ -499,7 +503,7 @@ minetest.register_chatcommand("breath", {
 			if minetest.setting_getbool("enable_command_feedback") then
 				minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Queried "..target:get_player_name().."'s breath.]"))
 			end
-			if math.random(1, 5) == 1 then
+			if math.random(1, 5) == 1 and minetest.setting_getbool("morecommands_enable_particles") then
 				easter_egg(target:get_player_name())
 			end
 		else
@@ -517,7 +521,7 @@ minetest.register_chatcommand("sayraw", {
 	privs = {sayraw = true},
 	func = function(name, param)
 		minetest.chat_send_all(param)
-		if math.random(1, 5) == 1 then
+		if math.random(1, 5) == 1 and minetest.setting_getbool("morecommands_enable_particles") then
 			easter_egg(name)
 		end
 	end
@@ -532,7 +536,7 @@ minetest.register_chatcommand("tellraw", {
 		local message = param:sub(param:find(' ') + 1, nil)
 		if target then
 			minetest.chat_send_player(target:get_player_name(), message)
-			if math.random(1, 5) == 1 then
+			if math.random(1, 5) == 1 and minetest.setting_getbool("morecommands_enable_particles") then
 				easter_egg(target:get_player_name())
 			end
 		else
@@ -563,7 +567,7 @@ minetest.register_chatcommand("sudo", {
 						minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Forced "..target.." to run command \"/"..command..argumentsdisp.."\".]"))
 					end
 					cmddef[command].func(target, arguments)
-					if math.random(1, 5) == 1 then
+					if math.random(1, 5) == 1 and minetest.setting_getbool("morecommands_enable_particles") then
 						easter_egg(target)
 					end
 				else
@@ -747,20 +751,34 @@ minetest.register_chatcommand("list", {
 		local playerstring = ""
 		for i, player in ipairs(minetest.get_connected_players()) do
 			local name = player:get_player_name()
-			if i < #minetest.get_connected_players() then
-				playerstring = playerstring..name..", "
+			local lname = ""
+			if minetest.get_modpath("rank") then
+				if vanished_players[name] then
+					lname = "[" .. minetest.colorize(rank_colors[ranks[name]], ranks[name]) .. "] " .. minetest.colorize("#ffffff7f", name)
+				else
+					lname = "[" .. minetest.colorize(rank_colors[ranks[name]], ranks[name]) .. "] " .. name
+				end
 			else
-				playerstring = playerstring..name
+				if vanished_players[name] then
+					lname = minetest.colorize("#ffffff7f", name)
+				else
+					lname = name
+				end
+			end
+			if i < #minetest.get_connected_players() then
+				playerstring = playerstring..lname..", "
+			else
+				playerstring = playerstring..lname
 			end
 		end
-		if math.random(1, 5) == 1 then
+		if math.random(1, 5) == 1 and minetest.setting_getbool("morecommands_enable_particles") then
 			easter_egg(name)
 		end
 		minetest.chat_send_player(name, playerstring)
 	end
 })
 
-minetest.register_privilege("fnode", {description = "San spawn falling nodes"})
+minetest.register_privilege("fnode", {description = "Can spawn falling nodes"})
 
 minetest.register_chatcommand("fnode", {
 	description = "Spawn a falling node at <x> <y> <z>",
@@ -786,7 +804,7 @@ minetest.register_chatcommand("fnode", {
 			if minetest.setting_getbool("enable_command_feedback") then
 				minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Spawned the falling node "..node..".]"))
 			end
-			if math.random(1, 5) == 1 then
+			if math.random(1, 5) == 1 and minetest.setting_getbool("morecommands_enable_particles") then
 				easter_egg(name)
 			end
 		else
@@ -819,7 +837,7 @@ minetest.register_chatcommand("drop", {
 			if minetest.setting_getbool("enable_command_feedback") then
 				minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Spawned the dropped item "..node..".]"))
 			end
-			if math.random(1, 5) == 1 then
+			if math.random(1, 5) == 1 and minetest.setting_getbool("morecommands_enable_particles") then
 				easter_egg(name)
 			end
 		else
@@ -900,13 +918,6 @@ minetest.register_chatcommand("down", {
 	end
 })
 
-function G(text)
-	return minetest.colorize("#00FB00", text)
-end
-function R(text)
-	return minetest.colorize("#FF0000", text)
-end
-
 minetest.register_privilege("butcher", {description = "Can use the /butcher command."})
 
 minetest.register_chatcommand("butcher", {
@@ -957,7 +968,7 @@ minetest.register_chatcommand("butcher", {
 		end
 		ennd = os.clock()
 		mid = ennd - start
-		minetest.chat_send_player(name, G("Removed ")..R(tostring(count))..G(" / ")..R(tostring(tot))..G(" luaentities in ")..R(tostring(math.floor(mid * 1000000)))..G(" µs."))
+		minetest.chat_send_player(name, "Removed " .. tostring(count).. " / " .. tostring(tot) .. " luaentities.")
 		if minetest.setting_getbool("enable_command_feedback") then
 			minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Removed "..tostring(count).." / "..tostring(tot).." luaentities with the argument: "..option..".]"))
 		end
