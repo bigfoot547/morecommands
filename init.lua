@@ -1,4 +1,5 @@
 vanished_players = {}
+player_nicks = {}
 
 -- Kill
 -- Spawpoint
@@ -106,16 +107,20 @@ minetest.register_chatcommand("nick", {
 	params = "<nickname>",
 	privs = {nick = true},
 	func = function(name, param)
-		local target = minetest.get_player_by_name(name)
+		local target = minetest.get_player_by_name(name
 		if minetest.get_modpath("rank") then
 			target:set_nametag_attributes({text = "                                          ["..color(rank_colors[ranks[name]])..ranks[name]..color("#ffffff").."]: "..param})
+			nicked_players[name] = param
 			if param == "" then
 				target:set_nametag_attributes({text = "                                          ["..color(rank_colors[ranks[name]])..ranks[name]..color("#ffffff").."]: "..name})
+				nicked_players[name] = nil
 			end
 		else
 			target:set_nametag_attributes({text = param})
+			nicked_players[name] = param
 			if param == "" then
 				target:set_nametag_attributes({text = name})
+				nicked_players[name] = nil
 			end
 		end
 		if math.random(1, 5) == 1 and minetest.setting_getbool("morecommands_enable_particles") then
