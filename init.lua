@@ -1,5 +1,5 @@
 vanished_players = {}
-player_nicks = {}
+nicked_players = {}
 
 -- Kill
 -- Spawpoint
@@ -878,6 +878,9 @@ minetest.register_chatcommand("up", {
 				elseif node and minetest.registered_nodes[node.name].walkable and not minetest.registered_nodes[minetest.get_node({x = pos.x, y = j + 1, z = pos.z}).name].walkable and not minetest.registered_nodes[minetest.get_node({x = pos.x, y = j + 2, z = pos.z}).name].walkable then
 					minetest.chat_send_player(name, "Found a node at y = "..math.ceil(tostring(j + 1))..".")
 					minetest.get_player_by_name(name):setpos({x = pos.x, y = math.ceil(j + 1), z = pos.z})
+					if math.random(1, 5) == 1 and minetest.setting_getbool("morecommands_enable_particles") then
+						easter_egg(name)
+					end
 					j = j + 1
 					break
 				end
@@ -914,6 +917,9 @@ minetest.register_chatcommand("down", {
 				elseif node and minetest.registered_nodes[node.name].walkable and not minetest.registered_nodes[minetest.get_node({x = pos.x, y = j + 1, z = pos.z}).name].walkable and not minetest.registered_nodes[minetest.get_node({x = pos.x, y = j + 2, z = pos.z}).name].walkable then
 					minetest.chat_send_player(name, "Found a node at y = "..math.ceil(tostring(j + 1))..".")
 					minetest.get_player_by_name(name):setpos({x = pos.x, y = math.ceil(j + 1), z = pos.z})
+					if math.random(1, 5) == 1 and minetest.setting_getbool("morecommands_enable_particles") then
+						easter_egg(name)
+					end
 					j = j - 1
 					break
 				end
@@ -977,6 +983,59 @@ minetest.register_chatcommand("butcher", {
 		if minetest.setting_getbool("enable_command_feedback") then
 			minetest.chat_send_all(minetest.colorize("#7F7F7F", "["..name..": Removed "..tostring(count).." / "..tostring(tot).." luaentities with the argument: "..option..".]"))
 		end
+		if math.random(1, 5) == 1 and minetest.setting_getbool("morecommands_enable_particles") then
+			easter_egg(name)
+		end
+	end
+})
+
+local function get_front(pos, dir, mult)
+	return vector.add(vector.multiply(dir, mult), pos)
+end
+
+local function soft(pos)
+	local node = minetest.get_node(vector.add(pos, {x = 0, y = -1, z = 0})).name
+	local node_up = minetest.get_node(pos).name
+	local walkable = minetest.registered_nodes[node].walkable and minetest.registered_nodes[node_up].walkable
+	
+	return not walkable	
+end
+
+minetest.register_chatcommand("thru", {
+	privs = {teleport = true},
+	description = "Teleport to a free space in front of you.",
+	params = "",
+	func = function(name, param)
+		local player = minetest.get_player_by_name(name)
+		local dir = minetest.facedir_to_dir(minetest.dir_to_facedir(player:get_look_dir()))
+		local pos = vector.round(player:getpos())
+		local i, j
+		local found = false
+		
+		for i = 1, 10 do
+			if not soft(get_front(pos, dir, i)) then
+				found = true
+				j = i
+				break
+			end
+		end
+		
+		if not found then
+			minetest.chat_send_player(name, minetest.colorize("#ff0000", "Wall not found."))
+			return
+		end
+		
+		for i = 1, 10 do
+			if soft(get_front(pos, dir, i)) and i > j then
+				player:setpos(get_front(pos, dir, i))
+				minetest.chat_send_player(name, "Node found!")
+				if math.random(1, 5) == 1 and minetest.setting_getbool("morecommands_enable_particles") then
+					easter_egg(name)
+				end
+				return
+			end
+		end
+		minetest.chat_send_player(name, minetest.colorize("#ff0000", "No soft nodes found."))
 	end
 })
 
