@@ -29,6 +29,15 @@ These commands are mostly admin commands, but some are not.
   * Go up a specified ammount of layers with the /up command
   * Go down a specified ammount of layers with the /down command
   * Remove all luaentities with the type monster with the /butcher command
+  * Teleport thru walls with the /thru command
+  * Return to a previous location after teleporting with the /back command
+
+# A little more...
+In order to make the /back command work with your mod, follow these steps:
+
+ * Add `morecommands` to `depends.txt`
+ * **Before** your mod teleports the player, set `back_pos[name]` to the player's *rounded* position, replacing `name` with the player's name.
+ * You're done! You can now type /back after you get teleported.
 
 ## Licence
 **Code: LGPL v2.1**
