@@ -2,3 +2,5 @@ default
 beds
 mesecons_commandblock?
 rank?
+home?
+killme?

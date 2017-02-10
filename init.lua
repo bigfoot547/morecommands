@@ -1,5 +1,6 @@
 vanished_players = {}
 nicked_players = {}
+back_pos = {}
 
 -- Kill
 -- Spawpoint
@@ -24,11 +25,6 @@ nicked_players = {}
 -- Butcher
 -- Up
 -- Down
-
--- TODO: Add print statements.
-
-dofile(minetest.get_modpath("morecommands").."/orwell_contrib.lua")
-dofile(minetest.get_modpath("morecommands").."/red-001_contrib.lua")
 
 local start = os.clock()
 local whitelist = {minetest.setting_get("name")}
@@ -408,6 +404,9 @@ minetest.register_chatcommand("spawn", {
 	params = "",
 	privs = {spawn = true},
 	func = function(name, param)
+		local pos = minetest.get_player_by_name(name):getpos()
+		back_pos[name] = vector.round(pos)
+		
 		if beds.spawn[name] then
 			minetest.get_player_by_name(name):setpos(beds.spawn[name])
 			minetest.chat_send_player(name, "Teleported to spawn.")
@@ -878,6 +877,7 @@ minetest.register_chatcommand("up", {
 				elseif node and minetest.registered_nodes[node.name].walkable and not minetest.registered_nodes[minetest.get_node({x = pos.x, y = j + 1, z = pos.z}).name].walkable and not minetest.registered_nodes[minetest.get_node({x = pos.x, y = j + 2, z = pos.z}).name].walkable then
 					minetest.chat_send_player(name, "Found a node at y = "..math.ceil(tostring(j + 1))..".")
 					minetest.get_player_by_name(name):setpos({x = pos.x, y = math.ceil(j + 1), z = pos.z})
+					back_pos[name] = vector.round(pos)
 					if math.random(1, 5) == 1 and minetest.setting_getbool("morecommands_enable_particles") then
 						easter_egg(name)
 					end
@@ -917,6 +917,7 @@ minetest.register_chatcommand("down", {
 				elseif node and minetest.registered_nodes[node.name].walkable and not minetest.registered_nodes[minetest.get_node({x = pos.x, y = j + 1, z = pos.z}).name].walkable and not minetest.registered_nodes[minetest.get_node({x = pos.x, y = j + 2, z = pos.z}).name].walkable then
 					minetest.chat_send_player(name, "Found a node at y = "..math.ceil(tostring(j + 1))..".")
 					minetest.get_player_by_name(name):setpos({x = pos.x, y = math.ceil(j + 1), z = pos.z})
+					back_pos[name] = vector.round(pos)
 					if math.random(1, 5) == 1 and minetest.setting_getbool("morecommands_enable_particles") then
 						easter_egg(name)
 					end
@@ -1012,6 +1013,8 @@ minetest.register_chatcommand("thru", {
 		local i, j
 		local found = false
 		
+		back_pos[name] = pos
+		
 		for i = 1, 10 do
 			if not soft(get_front(pos, dir, i)) then
 				found = true
@@ -1036,6 +1039,25 @@ minetest.register_chatcommand("thru", {
 			end
 		end
 		minetest.chat_send_player(name, minetest.colorize("#ff0000", "No soft nodes found."))
+	end
+})
+
+minetest.register_chatcommand("back", {
+	description = "Return to previous position",
+	privs = {teleport = true},
+	params = "",
+	func = function(name, param)
+		local player = minetest.get_player_by_name(name)
+		if back_pos[name] then
+			player:setpos(back_pos[name])
+			if math.random(1, 5) == 1 and minetest.setting_getbool("morecommands_enable_particles") then
+				easter_egg(name)
+			end
+			minetest.chat_send_player(name, "You have been returned to " .. minetest.pos_to_string(back_pos[name]) .. ".")
+			back_pos[name] = nil
+		else
+			minetest.chat_send_player(name, minetest.colorize("#ff0000", "Nowhere to return to."))
+		end
 	end
 })
 
@@ -1105,5 +1127,72 @@ function easter_egg(name)
 		texture = "particle_2.png^[colorize:#"..rand_color()
 	})
 end
+
+-- Add /back support to /teleport command.
+
+local act = minetest.chatcommands["teleport"].func 
+minetest.override_chatcommand("teleport", {
+	func = function(name, param)
+		local pos = minetest.get_player_by_name(name):getpos()
+		back_pos[name] = vector.round(pos)
+		local text, good
+		
+		good, text = act(name, param)
+		if text then
+			minetest.chat_send_player(name, text)
+			if good then
+				back_pos[name] = vector.round(pos)
+			end
+		end
+	end
+})
+
+-- Add /back support for the /killme command.
+
+local act = minetest.chatcommands["killme"].func
+minetest.override_chatcommand("killme", {
+	func = function(name, param)
+		local pos = minetest.get_player_by_name(name):getpos()
+		local text, good
+		
+		good, text = act(name, param)
+		if text then
+			minetest.chat_send_player(name, text)
+			if good then
+				back_pos[name] = vector.round(pos)
+			end
+		end
+	end
+})
+
+-- Add /back support for the /home command.
+
+local act = minetest.chatcommands["home"].func
+minetest.override_chatcommand("home", {
+	func = function(name, param)
+		local pos = minetest.get_player_by_name(name):getpos()
+		back_pos[name] = vector.round(pos)
+		local text, good
+		
+		good, text = act(name, param)
+		if text then
+			minetest.chat_send_player(name, text)
+			if good then
+				back_pos[name] = vector.round(pos)
+			end
+		end
+	end
+})
+
+-- Add /back support for returning to death point.
+
+minetest.register_on_dieplayer(function(player)
+	local pos = player:getpos()
+	back_pos[player:get_player_name()] = vector.round(pos)
+	minetest.chat_send_player(player:get_player_name(), "Type /back to return to your death point.")
+end)
+
+dofile(minetest.get_modpath("morecommands").."/orwell_contrib.lua")
+dofile(minetest.get_modpath("morecommands").."/red-001_contrib.lua")
 
 print("[morecommands] Mod loaded in "..tostring(math.floor((os.clock() - start)*1000000)).."µs.")
