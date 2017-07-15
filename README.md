@@ -63,7 +63,7 @@ Here is some ***long*** overdue documentation.
  * Print the itemstring of the item in your hand with the /pwii command. (Works fine with unknown items.)
  * Print information on a player using the /pinfo command. (You need the server priv.)
  * Print the metadata of the node you are in with the /dumpmeta command.
- * Print a specefic key of the metadata of the block you are in with the /getmeta command. (So to find the owner of a door, stand in the doorway and type "/getmeta owner". If you have any trouble, PM me on the forums.)
+ * Print a specific key of the metadata of the block you are in with the /getmeta command. (So to find the owner of a door, stand in the doorway and type "/getmeta owner". If you have any trouble, PM me on the forums.)
  * Set a specific key of the metadata of the block you are in with the setmeta command. (So to make yourself the owner of a door, stand in the doorway and type "/setmeta owner *yourname*".)
  * Show a formspec to everyone with a big area to type in text with the /broadcast command.
  * Show a formspec to *someone* with a big area to type in text with the /showtext command.
